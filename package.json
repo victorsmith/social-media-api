@@ -1,0 +1,30 @@
+{
+  "name": "social-media-api",
+  "version": "1.0.0",
+  "description": "A generic social media API. Written for Speer Technologies.",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victorsmith/social-media-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/victorsmith/social-media-api/issues"
+  },
+  "homepage": "https://github.com/victorsmith/social-media-api#readme",
+  "devDependencies": {
+    "@babel/core": "^7.18.9",
+    "@babel/node": "^7.18.9",
+    "@babel/preset-env": "^7.18.9",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1"
+  }
+}
