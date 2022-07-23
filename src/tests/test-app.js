@@ -1,15 +1,41 @@
-// App with a fake in-memory db
-require('dotenv').config();
-const express = require('express');
-const testapp = express();
+import express from 'express';
+import session from 'express-session';
+import path from 'path';
+import cors from 'cors';
+import dotenv from 'dotenv/config';
 
-require('../utils/test-db-config');
+import passport from 'passport';
+import initializePassport from '../utils/passport-utils';
 
-const indexRouter = require('../routes/index');
+import routes from '../routes';
 
-testapp.use(express.urlencoded({ extended: false }));
-testapp.use(express.json());
-testapp.use('/', indexRouter);
+// DB CONFIG CODE
+import testdb from '../utils/test-db-config';
 
-module.exports = testapp;
- 
+// Init passport using function from passport-utils.
+initializePassport(passport);
+
+const app = express();
+
+// Application Level Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+	session({
+		secret: process.env.SECRET,
+		resave: false,
+		saveUninitialized: true,
+	})
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/users', routes.users);
+
+app.get('/', (req, res) => {
+	res.send(200, 'Home Page');
+});
+
+
+module.exports = app;
