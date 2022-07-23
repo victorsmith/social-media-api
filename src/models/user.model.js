@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// var uniqueValidator = require('mongoose-unique-validator');
+var uniqueValidator = require('mongoose-unique-validator');
 // var findOrCreate = require('mongoose-findorcreate');
 
 const UserSchema = new Schema({
@@ -13,7 +13,7 @@ const UserSchema = new Schema({
 });
 
 // Unique validator => Prevents duplicate user names
-// UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(uniqueValidator);
 // UserSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model('User', UserSchema);
