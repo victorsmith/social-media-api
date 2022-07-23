@@ -1,5 +1,5 @@
 require('dotenv').config();
-var app = require('./test-app');
+import app from './test-app';
 var request = require('supertest');
 var mongoose = require('mongoose');
 
@@ -8,10 +8,10 @@ var mongoose = require('mongoose');
 import { generateUser } from '../utils/seed-test-db';
 
 // Seed the database with fake data before proceeding
-beforeAll(async (done) => {
-	const obj = generateUser();
-	done();
-});
+// beforeAll(async (done) => {
+// 	const obj = generateUser();
+// 	done();
+// });
 
 // Fetch register page
 describe('GET /users/new', () => {
@@ -28,8 +28,7 @@ describe('GET /users/new', () => {
 // Registration of new user
 describe('POST /users', () => {
 	it('Creates a new user (with unqiue name) and saves the user in the db', async () => {
-		const res = await request(app)
-			.post('/users')
+		const res = await request(app).post('/users')
 			.send({
 				username: 'victor',
 				password: 'smith',

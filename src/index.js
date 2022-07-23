@@ -32,6 +32,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/users', routes.users);
+app.use('/session', routes.session);
 
 app.get('/', (req, res) => {
 	res.send(200, "Home Page")

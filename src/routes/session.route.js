@@ -18,7 +18,7 @@ sessionRouter.post(
 	'/',
 	passport.authenticate('local', {
 		successRedirect: '/',
-		failureRedirect: 'login',
+		failureRedirect: 'new',
 	})
 );
 
