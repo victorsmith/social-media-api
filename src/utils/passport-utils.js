@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-import User from '../models/user';
+import User from '../models/user.model';
 import bcrypt from 'bcryptjs';
 
 function initialize(passport) {

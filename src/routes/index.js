@@ -1,11 +1,7 @@
-import auth from './auth';
-// import users from './users'
-import tweets from './tweets';
-// import replies from './replies'
+import users from './users.route';
+import session from './session.route';
 
 export default {
-	auth,
-	// user,
-	tweets,
-	// replies
+	users,
+	session
 };

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 // User Model
-import User from '../models/user';
+import User from '../models/user.model';
 
 const usersRouter = new Router();
 
@@ -24,11 +24,14 @@ usersRouter.post('/', (req, res) => {
 			if (err) {
 				res.send('Error creating user');
 			}
-			// Redirect to login page once user has been registered
-			res.redirect('login');
+			// Redirect to login page once user has been registered 
+			res.redirect('/session/new');
 		});
 	});
 });
 
 // GET  /users/xxx => gets and renders current user data in a profile view
+
 // POST /users/xxx => updates new information about user
+
+export default usersRouter;
