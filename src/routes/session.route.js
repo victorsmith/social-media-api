@@ -10,7 +10,7 @@ const sessionRouter = new Router();
 
 // GET    /session/new gets the webpage that has the login form
 sessionRouter.get('/new', (req, res) => {
-	res.send('This endpoint would trigger a render of the login page');
+	res.send(200, 'This endpoint would trigger a render of the login page');
 });
 
 // POST   /session authenticates credentials against database
