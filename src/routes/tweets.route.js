@@ -33,7 +33,7 @@ tweetsRouter.get('/:id', (req, res) => {
 // Post new tweet
 tweetsRouter.post('/', (req, res) => {
   const tweet = new Tweet({
-    user: req.user._id,
+    user: req.user,
     content: req.body.content,
   });
   tweet.save((err) => {

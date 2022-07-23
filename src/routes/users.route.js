@@ -33,6 +33,9 @@ usersRouter.post('/', (req, res) => {
 
 // GET  /users/xxx => gets and renders current user data in a profile view
 
-// POST /users/xxx => updates new information about user
+
+// PUT /users/:id => updates new information about user
+usersRouter.put('/:id', (req, res) => {})
+
 
 export default usersRouter;
