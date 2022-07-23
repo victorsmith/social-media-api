@@ -22,10 +22,12 @@ usersRouter.post('/', (req, res) => {
 			password: hashedPassword,
 		}).save((err) => {
 			if (err) {
-				res.send('Error creating user');
+				console.log(err);
+				// return next(err);	
+				res.send(500, "Duplicate Username");
 			}
 			// Redirect to login page once user has been registered 
-			res.send(201, "Registration succesful")
+			// res.send(201, "Registration succesful")
 			// res.redirect('/session/new');
 		});
 	});
