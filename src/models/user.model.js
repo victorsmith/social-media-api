@@ -8,6 +8,8 @@ const UserSchema = new Schema({
 	password: { type: String, required: true },
 	tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
 	comments: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+	followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+	following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
 
 // Unique validator => Prevents duplicate user names
