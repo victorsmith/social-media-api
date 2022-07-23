@@ -4,7 +4,7 @@ var request = require('supertest');
 var mongoose = require('mongoose');
 
 // Use in memory mongo db instance for each testing module
-require('../utils/test-db-config');
+// require('../utils/test-db-config');
 import { generateUser } from '../utils/seed-test-db';
 
 // Seed the database with fake data before proceeding
@@ -19,27 +19,25 @@ describe('GET /users/new', () => {
 		const res = await request(app).get('/users/new');
 		
 		expect(res.statusCode).toEqual(200);
-		expect(res.body.message).toEqual(
+		expect(res.text).toEqual(
 			'This endpoint would trigger a render of the register page (if routing is handled on the backend instead of React Router)'
 		);
 	});
 });
 
 // Registration of new user
-describe('POST /users/', () => {
+describe('POST /users', () => {
 	it('Creates a new user (with unqiue name) and saves the user in the db', async () => {
 		const res = await request(app)
-			.post('/users/')
+			.post('/users')
 			.send({
 				username: 'victor',
 				password: 'smith',
 			})
 			.set('Accept', 'application/json')
+		
 		expect(res.statusCode).toEqual(201);
-		expect(res.header['content-type']).toEqual(
-			expect.stringMatching(/json/)
-		);
-		expect(res.body.message).toEqual('Registration succesful');
+		expect(res.text).toEqual('Registration succesful');
 	});
 });
 

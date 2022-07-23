@@ -26,7 +26,7 @@ usersRouter.post('/', (req, res) => {
 			}
 			// Redirect to login page once user has been registered 
 			res.send(201, "Registration succesful")
-			res.redirect('/session/new');
+			// res.redirect('/session/new');
 		});
 	});
 });
