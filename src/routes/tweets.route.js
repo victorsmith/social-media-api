@@ -14,13 +14,20 @@ tweetsRouter.get('/', (req, res) => {
 			if (err) {
 				res.send(500, "No tweets found");
 			}
-			res.json(tweets);
+      res.json(tweets)
+			res.send(200, "Tweets fetched");
 		});
 });
 
 // Get tweet by id
 tweetsRouter.get('/:id', (req, res) => {
-	Tweet.findById(req.params.id, (err, tweet) => res.json(tweet));
+	Tweet.findById(req.params.id, (err, tweet) => {
+    if (err) {
+      res.send(500, "No tweet found");
+    }
+    res.json(tweet)
+    res.send(200, "Tweet fetched");
+  });
 });
 
 // Post new tweet
@@ -30,10 +37,9 @@ tweetsRouter.post('/', (req, res) => {
 		content: req.body.content,
 	}).save((err) => {
 		if (err) {
-			console;
-			res.send(err);
+			res.send(500, 'Error posting tweet');
 		}
-		res.json(tweet);
+		res.send(201, "Tweet posted");
 	});
 });
 
@@ -41,7 +47,7 @@ tweetsRouter.post('/', (req, res) => {
 tweetsRouter.put('/:id', (req, res) => {
 	Tweet.findByIdAndUpdate(req.params.id, req.body, (err, tweet) => {
 		if (err) {
-			res.send(err);
+			res.send(500, "Error updating tweet");
 		}
     res.send(201, "Tweet updated");
 	});
@@ -51,7 +57,7 @@ tweetsRouter.put('/:id', (req, res) => {
 tweetsRouter.delete('/:id', (req, res) => {
 	Tweet.findByIdAndRemove(req.params.id, (err) => {
 		if (err) {
-			res.send(err);
+			res.send(500, "Error deleting tweet");
 		}
 		res.json({ message: 'Tweet deleted' });
 	});
