@@ -33,6 +33,7 @@ app.use(passport.session());
 
 app.use('/users', routes.users);
 app.use('/session', routes.session);
+app.use('/tweets', routes.tweets);
 
 app.get('/', (req, res) => {
 	res.send(200, "Home Page")
