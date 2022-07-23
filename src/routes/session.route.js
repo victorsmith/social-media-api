@@ -8,14 +8,20 @@ import User from '../models/user.model';
 const sessionRouter = new Router();
 
 
-// GET    /session/new gets the webpage that has the login form
+// GET /session
+sessionRouter.get('/', (req, res) => {
+	res.send(req.user);
+});
+
+// GET /session/new 
 sessionRouter.get('/new', (req, res) => {
 	res.send(200, 'This endpoint would trigger a render of the login page');
 });
 
-// POST   /session authenticates credentials against database
+// POST /session
 sessionRouter.post(
 	'/',
+	// Functions are handled inside 'utils/passport-utils'
 	passport.authenticate('local', {
 		successRedirect: '/',
 		failureRedirect: 'new',
@@ -30,10 +36,5 @@ sessionRouter.delete('/', (req, res) => {
 });
 
 
-// GET  /Get current user 
-// => Mostly for testing passportJS because I haven't done auth stuff recently
-sessionRouter.get('/current-user', (req, res) => {
-	res.send(req.user);
-});
 
 export default sessionRouter;
