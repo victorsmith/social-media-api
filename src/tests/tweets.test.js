@@ -43,12 +43,11 @@ describe('POST /tweets', () => {
 
 describe('PUT /tweets/:id', () => {
 	it('Edits existing tweet with :id. Changes content from "not edited tweet" => "edited tweet" ', async () => {
-		const target = '62dbc86a98cd4531477b1ba6';
 
 		const res = await request(app)
 			.put(`/tweets/${targetID}`)
 			.send({
-				content: 'Edited tweet',
+				content: 'edited tweet',
 			})
 			.set('Accept', 'application/json');
 
@@ -65,7 +64,6 @@ describe('DELETE /tweets/:id', () => {
 
 		const res = await request(app)
 			.delete(`/tweets/${targetID}`)
-			.params({ id: target });
 
 		console.log(res.body);
 

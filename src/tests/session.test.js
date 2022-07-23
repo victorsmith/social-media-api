@@ -3,9 +3,6 @@ import app from './test-app';
 var request = require('supertest');
 var mongoose = require('mongoose');
 
-// Use in memory mongo db instance for each testing module
-// require('../utils/test-db-config');
-// const seedDB = require('./seed-test-db');
 
 describe('GET /session/new', () => {
 	it('Fetches the login page (if one existed in a real app)', async () => {
