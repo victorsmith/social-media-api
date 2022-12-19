@@ -7,7 +7,26 @@ import { use } from 'passport';
 const usersRouter = new Router();
 
 // Get all users => This request requires an internal admin API key for secuirty reasons
-usersRouter.get('/', (req, res, next) => {});
+usersRouter.get('/', (req, res, next) => {
+	User.find({}, (err, users) => {
+		if (err) {
+			res.send(500, 'No users found');
+		}
+		res.json(users);
+		res.send(200, 'Users fetched');
+	});
+});
+
+// Get current logged in user
+usersRouter.get('/me', (req, res, next) => {
+	User.findOne({ username: req.user.username }, (err, user) => {
+		if (err) {
+			res.send(500, 'No users found');
+		}
+		res.json(user);
+		res.send(200, 'Users fetched');
+	});
+});
 
 // Get all users that the current logged in user follows
 usersRouter.get('/following', (req, res, next) => {
@@ -124,5 +143,6 @@ usersRouter.delete('/:username', (req, res, next) => {
 		res.send(200, 'User deleted');
 	});
 });
+
 
 export default usersRouter;
