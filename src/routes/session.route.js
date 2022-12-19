@@ -15,7 +15,7 @@ sessionRouter.get('/', (req, res) => {
 
 // GET /session/new 
 sessionRouter.get('/new', (req, res) => {
-	res.send(200, 'This endpoint would trigger a render of the login page');
+	res.send(200, 'This endpoint trigger a render of the login page');
 });
 
 // POST /session
@@ -34,7 +34,5 @@ sessionRouter.delete('/', (req, res) => {
 	req.logOut();
 	res.redirect('new');
 });
-
-
 
 export default sessionRouter;
