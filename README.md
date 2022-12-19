@@ -17,16 +17,21 @@ I love Jest and I love Supertest. It's fast to implement and works well.
 
 ---
 
-# What I would do differently (if this was a real production project):
+# A project with better tests and Jenkins CI/CD pipeline
+
+[Trial.IO: Android Application w/ Firebase Backend](https://github.com/CMPUT301W21T28/trialio)
+
+---
+
+# What I would do differently if I had more time:
 
 ### 1) More tests
-There are only a few tests in this project. I would add more tests to cover more of the codebase. I would also add tests for the front-end (probably Jest again since it seems to work well with react).
+There are only a few tests in this project. I would add more tests to cover more of the codebase. I would also add tests for the front-end (probably Jest again, since it seems to work well with react).
 
 ### 2. More code splitting and error handling
-Apologies for the excessivley long functions. SOLID principles were definitley not followed in this project. If I had more time, I would split the code into smaller functions, add stuff to controllers and services folders, and add more error handling
-
+Apologies for the excessivley long functions. SOLID principles were definitley not followed in this project. If I had more time, I would split the code into smaller functions, add put stuff in the controllers and services folders. The error handling is also not great.
 ### 3) Use passport-JS w/ several auth options.
-I'd add siin with Google, Github, Facebook etc. I'd also add a forgot password option.
+I'd add sign in with Google and Github. I'd also add a forgot password option.
 
 ### 4) I'd use TypeScript.
 I opted to use JavaScript because I needed to get this project done in a limited amount of time. I would have used TypeScript if I had more time. Staticaclly typed languages are slow to write and make you feel dumb, but they are fast to read, debug and easier to maintain from my experience. 
@@ -47,13 +52,13 @@ I've been learning about DevOps lately, and would love to use the knowledge in a
 
 ---
 
-API Docs:
+## How to run the project
 
-GET    /session/new gets the webpage that has the login form
-POST   /session authenticates credentials against database
-DELETE /session destroys session and redirect to /
+### 1) Clone the project
+``` git clone ```
 
-GET  /users/new gets the webpage that has the registration form
-POST /users records the entered information into database as a new /user/xxx
-GET  /users/xxx // gets and renders current user data in a profile view
-POST /users/xxx // updates new information about user
+### 2) Install dependencies
+``` npm install ```
+
+### 3) Run the project
+``` npm run dev ```
