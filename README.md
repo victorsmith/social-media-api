@@ -2,9 +2,8 @@
 
 A generic social media API. Written for my upcoming twitter clone project I'm currently working on.
 
-================================+==============================+===========================
 
-Design / Tech Stack Decisions:
+#Design / Tech Stack Decisions:
 
 Authentication: JWT (Passport-JS)
 Initially, I was going to write my own JWT authentication library/package to demonstrate my understanding of the process. Unfotunatley, I had to urgently fly Houston for a work trip and ended up having a 70 hour week :(.
@@ -16,9 +15,9 @@ Mongoose is awesome and I love using it in my Express projects. If I couldn't us
 Testing: Jest w/ Supertest
 I love Jest and I love Supertest. It's fast to implement and works well.
 
-================================+==============================+===========================
 
-What I would do differently (if this was a real production project):
+
+#What I would do differently (if this was a real production project):
 
 1) More tests
 There are only a few tests in this project. I would add more tests to cover more of the codebase. I would also add tests for the front-end (probably Jest again since it seems to work well with react).
