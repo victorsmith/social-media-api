@@ -67,7 +67,19 @@ router.post(
 	}
 );
 // Login
-router.post('/login', async (req, res, next) => {});
+router.post('/login', async (req, res, next) => {
+	const {username, password} = req.body;
+
+	try {
+		const user = User.find({ username });
+		if (user) {
+			return res.status(201).json({
+				message: "User Information",
+				user: user,
+			})
+		}
+	} catch (error) {}
+});
 
 router.get('/test', (req, res) => {
 	res.status(200).json({
