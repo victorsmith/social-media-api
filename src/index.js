@@ -12,6 +12,9 @@ import routes from './routes';
 // DB CONFIG CODE
 import mongoDB from './utils/db-config';
 
+// Passport Stratergies
+const jwtStrategy = require('../passport/jwt');
+
 // Init passport using function from passport-utils.
 initializePassport(passport);
 
@@ -28,17 +31,19 @@ app.use(
 		saveUninitialized: true,
 	})
 );
+
+// Passport Stuff
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(jwtStrategy);
 
-app.use('/auth', routes.auth)
+app.use('/auth', routes.auth);
 app.use('/users', routes.users);
 app.use('/session', routes.session);
 app.use('/tweets', routes.tweets);
 
-app.get('/', (req, res) => {
-	res.send(200, "Home Page")
-});
+// Implement better routing if time is available later
+// app.use('/api', routes.index);
 
 app.listen(process.env.PORT, () => {
 	console.log(`Server running on port ${process.env.PORT}`);

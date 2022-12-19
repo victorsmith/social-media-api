@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { compare } = require('bcryptjs');
 const ExtractJwt = require("passport-jwt").ExtractJwt;
+const bcrypt = require('bcryptjs');
 
 function getJwtData (req, res, next) {
   
