@@ -10,7 +10,6 @@ import User from '../models/user.model';
 const router = new Router();
 const { body, validationResult } = require('express-validator');
 const {
-	getJwtData,
 	issueJwt,
 	generatePassword,
 	comparePassword,
@@ -99,5 +98,6 @@ router.get('/test', (req, res) => {
 		message: 'auth route works',
 	});
 });
+
 
 export default router;

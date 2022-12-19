@@ -49,6 +49,7 @@ tweetsRouter.put('/:id', (req, res) => {
 		if (err) {
 			res.send(500, "Error updating tweet");
 		}
+		// tweet.content = req.body.content;
     res.send(201, "Tweet updated");
 	});
 });
