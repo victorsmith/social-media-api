@@ -30,10 +30,9 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 	})
-	);
-	
-	// Passport Stuff
+);
 
+// PassportJS Stuff
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(jwtStrategy);
@@ -43,7 +42,7 @@ app.use('/users', routes.users);
 app.use('/session', routes.session);
 app.use('/tweets', routes.tweets);
 
-// Implement better routing if time is available later
+// Implement better routing if time is available later => this is kinda messy
 // app.use('/api', routes.index);
 
 app.listen(process.env.PORT, () => {

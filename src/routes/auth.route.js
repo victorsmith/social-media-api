@@ -7,8 +7,12 @@ const LocalStrategy = require('passport-local').Strategy;
 // User Model
 import User from '../models/user.model';
 
-const router = new Router();
-const { body, validationResult } = require('express-validator');
+const authRouter = new Router();
+
+// Validation middleware
+ const { body, validationResult } = require('express-validator');
+
+// JWT utils
 const {
 	issueJwt,
 	generatePassword,
@@ -20,7 +24,7 @@ const {
 // body('password').isLength({ min: 5 }),
 
 // Register new user
-router.post('/register', async (req, res, next) => {
+authRouter.post('/register', async (req, res, next) => {
 	// Validation result check
 	// const validationErrors = validationResult(req);
 	// if (!validationErrors.isEmpty()) {
@@ -63,7 +67,7 @@ router.post('/register', async (req, res, next) => {
 	}
 });
 // Login
-router.post('/login', async (req, res, next) => {
+authRouter.post('/login', async (req, res, next) => {
 	const { username, password } = req.body;
 
 	try {
@@ -93,11 +97,11 @@ router.post('/login', async (req, res, next) => {
 	}
 });
 
-router.get('/test', (req, res) => {
+authRouter.get('/test', (req, res) => {
 	res.status(200).json({
 		message: 'auth route works',
 	});
 });
 
 
-export default router;
+export default authRouter;
