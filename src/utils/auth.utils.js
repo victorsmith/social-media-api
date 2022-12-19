@@ -40,8 +40,8 @@ function generatePassword(password) {
 	return encryptedPassword;
 }
 
-function comparePassword(password) {
-  bcrypt.compare(password, user.password);
+function comparePassword(password, user) {
+  return bcrypt.compare(password, user.password);
 }
 
 module.exports.getJwtData = getJwtData;
