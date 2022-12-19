@@ -23,15 +23,14 @@ const {
 // Register new user
 router.post(
 	'/register',
-	// validation middleware
 	async (req, res, next) => {
 		// Validation result check
-		const validationErrors = validationResult(req);
-		if (!validationErrors.isEmpty()) {
-			res.send(400, "Validators failed")			
-			// return res.status(400).json({ errors: validationErrors.array() });
-			return
-		}
+		// const validationErrors = validationResult(req);
+		// if (!validationErrors.isEmpty()) {
+		// 	res.send(400, "Validators failed")			
+		// 	// return res.status(400).json({ errors: validationErrors.array() });
+		// 	return
+		// }
 
 		// Could do it in the middleware section
 		const { username, email, password } = req.body;
@@ -45,11 +44,11 @@ router.post(
 
 		try {
 			await user.save();
-
-			console.log("Hey")
-
 			// Issue JWT
-			const token = issueJWT(user);
+			const token = issueJwt(user);
+
+			console.log("Token", token)
+
 			return res.status(201).json({
 				message: 'Registration Succesful',
 				token: token,
@@ -60,7 +59,7 @@ router.post(
 				},
 			});
 		} catch (error) {
-			return res.statusa(400).json({
+			return res.status(400).json({
 				message: "Registration error",
 				error: error,
 			})

@@ -16,7 +16,7 @@ import mongoDB from './utils/db-config';
 const jwtStrategy = require('../passport/jwt');
 
 // Init passport using function from passport-utils.
-initializePassport(passport);
+passport.use(jwtStrategy);
 
 const app = express();
 
@@ -30,9 +30,10 @@ app.use(
 		resave: false,
 		saveUninitialized: true,
 	})
-);
+	);
+	
+	// Passport Stuff
 
-// Passport Stuff
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(jwtStrategy);

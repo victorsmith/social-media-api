@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const ExtractJwt = require("passport-jwt").ExtractJwt;
-const bcrypt = require('bcryptjs');
 
 function getJwtData (req, res, next) {
   
@@ -35,8 +34,8 @@ const issueJwt = (user) => {
 };
 
 
-async function generatePassword(password) {
-	const encryptedPassword = await bcrypt.hash(password, 10);
+function generatePassword(password) {
+	const encryptedPassword = bcrypt.hashSync(password, 10);
 	console.log('ePassword', encryptedPassword);
 	return encryptedPassword;
 }

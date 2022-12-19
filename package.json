@@ -1,7 +1,7 @@
 {
   "name": "social-media-api",
   "version": "1.0.0",
-  "description": "A generic social media API. Written for Speer Technologies.",
+  "description": "A generic social media API.",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",

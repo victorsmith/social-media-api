@@ -3,7 +3,8 @@
 const JwtStrategy = require('passport-jwt').Strategy,
 	ExtractJwt = require('passport-jwt').ExtractJwt;
 
-const User = require('../models/user');
+import User from '../models/user.model';
+
 
 var opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
