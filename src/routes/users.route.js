@@ -2,11 +2,10 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 // User Model
 import User from '../models/user.model';
-import { use } from 'passport';
 
 const usersRouter = new Router();
 
-// Get all users => This request requires an internal admin API key for secuirty reasons
+// Get all users => Should require an internal admin API key for secuirty reasons
 usersRouter.get('/', (req, res, next) => {
 	User.find({}, (err, users) => {
 		if (err) {
@@ -53,6 +52,8 @@ usersRouter.get('/followers', (req, res, next) => {
 // Get user with :username (username is a primary key)
 usersRouter.get('/:username', (req, res, next) => {});
 
+
+// Follow user with :username
 usersRouter.post('/:username/follow', async (req, res, next) => {
 	const { username } = req.params;
 
@@ -83,6 +84,7 @@ usersRouter.post('/:username/follow', async (req, res, next) => {
 	}
 });
 
+// Unfollow user with :username
 usersRouter.post('/:username/unfollow', async (req, res, next) => {
 	const { username } = req.params;
 

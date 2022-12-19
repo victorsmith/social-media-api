@@ -7,7 +7,7 @@ const UserSchema = new Schema({
 	username: { type: String, required: true, index: true, unique: true },
 	password: { type: String, required: true },
 	tweets: [{ type: Schema.Types.ObjectId, ref: 'Tweet' }],
-	comments: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
+	replies: [{ type: Schema.Types.ObjectId, ref: 'Reply' }],
 	followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 	following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
 });
