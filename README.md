@@ -1,5 +1,3 @@
-# social-media-api
-
 A generic social media API. Written for my upcoming twitter clone project I'm currently working on.
 
 
