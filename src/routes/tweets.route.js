@@ -2,6 +2,8 @@ import { Router } from 'express';
 
 // Models
 import Tweet from '../models/tweet.model';
+const passport = require('passport');
+
 
 const tweetsRouter = new Router();
 

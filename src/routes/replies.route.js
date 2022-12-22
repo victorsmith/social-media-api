@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 // User Model
 import User from '../models/user.model';
 import Tweet from '../models/tweet.model';
+const passport = require('passport');
 
 const replyRouter = new Router();
 

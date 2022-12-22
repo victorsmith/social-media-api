@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
+const passport = require('passport');
+
 // User Model
 import User from '../models/user.model';
 
