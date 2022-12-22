@@ -10,7 +10,7 @@ import User from '../models/user.model';
 const authRouter = new Router();
 
 // Validation middleware
- const { body, validationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 
 // JWT utils
 const {
@@ -97,11 +97,15 @@ authRouter.post('/login', async (req, res, next) => {
 	}
 });
 
-authRouter.get('/test', (req, res) => {
-	res.status(200).json({
-		message: 'auth route works',
-	});
-});
-
+authRouter.get(
+	'/test',
+	passport.authenticate('jwt', { session: false }),  // Passport middleware
+	(req, res) => {
+		res.status(200).json({
+			message: 'auth route works',
+			user: req.user
+		});
+	}
+);
 
 export default authRouter;

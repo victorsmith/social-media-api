@@ -5,7 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv/config';
 
 import passport from 'passport';
-import initializePassport from './utils/passport-utils';
+import initializePassport from './utils/passport.utils';
 
 import routes from './routes';
 
@@ -13,10 +13,7 @@ import routes from './routes';
 import mongoDB from './utils/db-config';
 
 // Passport Stratergies
-const jwtStrategy = require('../passport/jwt');
-
-// Init passport using function from passport-utils.
-passport.use(jwtStrategy);
+// import { initializePassport } from './utils/passport.utils';
 
 const app = express();
 
@@ -33,9 +30,13 @@ app.use(
 );
 
 // PassportJS Stuff
+
+// Init passport using function from passport-utils.
+initializePassport(passport)
+
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(jwtStrategy);
+
 
 app.use('/auth', routes.auth);
 app.use('/users', routes.users);
