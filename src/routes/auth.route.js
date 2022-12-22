@@ -97,6 +97,8 @@ authRouter.post('/login', async (req, res, next) => {
 	}
 });
 
+
+// Test JWT
 authRouter.get(
 	'/test',
 	passport.authenticate('jwt', { session: false }),  // Passport middleware
