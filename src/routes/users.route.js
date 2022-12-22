@@ -108,8 +108,8 @@ usersRouter.post(
 				res.status(400).json({ message: 'You cannot follow yourself' });
 			}
 
-			console.log("Follwed:", followed);
-			console.log("Follwed:", followed.followers);
+			console.log('Follwed:', followed);
+			console.log('Follwed:', followed.followers);
 
 			if (followed.followers.includes(me)) {
 				res.status(400).json({
@@ -137,36 +137,69 @@ usersRouter.post(
 );
 
 // Unfollow user with :username
+// Change to delete
 usersRouter.post(
 	'/:username/unfollow',
 	passport.authenticate('jwt', { session: false }),
 	async (req, res, next) => {
 		const { username } = req.params;
+		const me = req.user.username;
+
+		console.log('##ME', me);
 
 		try {
-			const userToUnfollow = await User.findOne({ username: username });
-
-			if (!userToUnfollow) {
-				return res.status(404).json({ message: 'User not found' });
-			}
-
-			if (userToUnfollow.username === req.user.username) {
-				return res
-					.status(400)
-					.json({ message: 'You cannot unfollow yourself' });
-			}
-
-			if (!userToUnfollow.followers.includes(req.user.username)) {
-				return res
-					.status(400)
-					.json({ message: 'You do not follow this user' });
-			}
-
-			const removeIndex = userToUnfollow.followers.indexOf(
-				req.user.username
+			const follower = await User.findOne({ username: me }).populate(
+				'following'
 			);
-			userToUnfollow.followers.splice(removeIndex, 1);
-			await userToUnfollow.save();
+			const followed = await User.findOne({
+				username: username,
+			}).populate('followers');
+
+			console.log('##################');
+			console.log('Follower', follower);
+			console.log('Followed', followed);
+
+			if (!followed) {
+				res.status(404).json({ message: 'User not found' });
+			}
+
+			if (followed.username === me) {
+				res.status(400).json({
+					message: 'You cannot unfollow yourself',
+				});
+			}
+
+			if (!followed.followers.includes(me)) {
+				res.status(400).json({
+					message: 'You don not follow this user',
+				});
+			}
+
+			// Rewmove the following user from followers array
+			const indexInFollowersArr = follower.followers.indexOf(follower);
+			const updatedFollowers = followed.followers.splice(
+				1,
+				indexInFollowersArr
+			);
+
+			// Rewmove the followed user from following array
+			const indexInFollowingArr = follower.following.indexOf(followed);
+			const updatedFollowing = follower.following.splice(
+				1,
+				indexInFollowingArr
+			);
+
+			follower.following = updatedFollowing;
+			followed.followers = updatedFollowers;
+
+			await follower.save();
+			await followed.save();
+
+			console.log("Here?")
+
+			return res.status(201).json({
+				message: 'Unfollow succesful',
+			});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: 'Server Error' });
