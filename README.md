@@ -23,7 +23,6 @@ I love Jest and I love Supertest. It's fast to implement and works well.
 
 # What I would do differently if I had more time:
 
-### 0) Add an API key autgentication system, tidy up the routing, add API versioning and add a .env file more suitable for production. 
 ### 1) More tests
 There are only a few tests in this project. I would add more tests to cover more of the codebase. I would also add tests for the front-end (probably Jest again, since it seems to work well with react).
 
