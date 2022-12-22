@@ -5,15 +5,15 @@ import cors from 'cors';
 import dotenv from 'dotenv/config';
 
 import passport from 'passport';
-import initializePassport from './utils/passport-utils';
+import initializePassport from './utils/passport.utils';
 
 import routes from './routes';
 
 // DB CONFIG CODE
 import mongoDB from './utils/db-config';
 
-// Init passport using function from passport-utils.
-initializePassport(passport);
+// Passport Stratergies
+// import { initializePassport } from './utils/passport.utils';
 
 const app = express();
 
@@ -28,15 +28,22 @@ app.use(
 		saveUninitialized: true,
 	})
 );
+
+// PassportJS Stuff
+
+// Init passport using function from passport-utils.
+initializePassport(passport)
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/users', routes.users);
-app.use('/session', routes.session);
 
-app.get('/', (req, res) => {
-	res.send(200, "Home Page")
-});
+app.use('/auth', routes.auth);
+app.use('/users', routes.users);
+app.use('/tweets', routes.tweets);
+
+// Implement better routing if time is available later => this is kinda messy
+// app.use('/api', routes.index);
 
 app.listen(process.env.PORT, () => {
 	console.log(`Server running on port ${process.env.PORT}`);

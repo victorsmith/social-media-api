@@ -3,15 +3,6 @@ import app from './test-app';
 var request = require('supertest');
 var mongoose = require('mongoose');
 
-// Use in memory mongo db instance for each testing module
-// require('../utils/test-db-config');
-import { generateUser } from '../utils/seed-test-db';
-
-// Seed the database with fake data before proceeding
-// beforeAll(async (done) => {
-// 	const obj = generateUser();
-// 	done();
-// });
 
 // Fetch register page
 describe('GET /users/new', () => {
