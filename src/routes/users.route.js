@@ -16,8 +16,7 @@ usersRouter.get(
 			if (err) {
 				res.send(500, 'No users found');
 			}
-			res.json(users);
-			res.send(200, 'Users fetched');
+			res.status(200).json(users);
 		});
 	}
 );
@@ -31,26 +30,25 @@ usersRouter.get(
 			if (err) {
 				res.send(500, 'No users found');
 			}
-			res.json(user);
-			res.send(200, 'Users fetched');
+		});
+	}
+	);
+	
+	
+	// Get all users that the current logged in user follows
+	usersRouter.get(
+		'/following',
+		passport.authenticate('jwt', { session: false }),
+		(req, res, next) => {
+			User.findOne({ username: req.user.username }, (err, user) => {
+				if (err) {
+					res.send(500, 'No users found');
+				}
+				res.status(200).json(user.following);
 		});
 	}
 );
 
-// Get all users that the current logged in user follows
-usersRouter.get(
-	'/following',
-	passport.authenticate('jwt', { session: false }),
-	(req, res, next) => {
-		User.findOne({ username: req.user.username }, (err, user) => {
-			if (err) {
-				res.send(500, 'No users found');
-			}
-			res.json(user.following);
-			res.send(200, 'Users fetched');
-		});
-	}
-);
 
 // Get all users that follow the current logged in user
 usersRouter.get(
@@ -73,7 +71,6 @@ usersRouter.get(
 	passport.authenticate('jwt', { session: false }),
 	(req, res, next) => {}
 );
-
 
 // Follow user with :username
 usersRouter.post(
@@ -185,6 +182,5 @@ usersRouter.delete(
 		});
 	}
 );
-
 
 export default usersRouter;
