@@ -32,23 +32,21 @@ usersRouter.get(
 			}
 		});
 	}
-	);
-	
-	
-	// Get all users that the current logged in user follows
-	usersRouter.get(
-		'/following',
-		passport.authenticate('jwt', { session: false }),
-		(req, res, next) => {
-			User.findOne({ username: req.user.username }, (err, user) => {
-				if (err) {
-					res.send(500, 'No users found');
-				}
-				res.status(200).json(user.following);
+);
+
+// Get all users that the current logged in user follows
+usersRouter.get(
+	'/following',
+	passport.authenticate('jwt', { session: false }),
+	(req, res, next) => {
+		User.findOne({ username: req.user.username }, (err, user) => {
+			if (err) {
+				res.send(500, 'No users found');
+			}
+			res.status(200).json(user.following);
 		});
 	}
 );
-
 
 // Get all users that follow the current logged in user
 usersRouter.get(
@@ -59,8 +57,7 @@ usersRouter.get(
 			if (err) {
 				res.send(500, 'No users found');
 			}
-			res.json(user.followers);
-			res.send(200, 'Users fetched');
+			res.status(200).json(user.followers);
 		});
 	}
 );
@@ -69,7 +66,23 @@ usersRouter.get(
 usersRouter.get(
 	'/:username',
 	passport.authenticate('jwt', { session: false }),
-	(req, res, next) => {}
+	(req, res, next) => {
+		User.findOne({ username: req.user.username }, (err, user) => {
+			if (err) {
+				res.send(500, 'No users found');
+			}
+
+			// Never send back the password of the user
+			const { _id, username, tweets, followers, following } = req.user;
+			res.status(200).json({
+				id: _id,
+				username: username,
+				tweets: tweets,
+				followers: followers,
+				following: following,
+			});
+		});
+	}
 );
 
 // Follow user with :username
@@ -79,27 +92,48 @@ usersRouter.post(
 	async (req, res, next) => {
 		const { username } = req.params;
 
+		console.log('Username:', username);
+		console.log('Logged in user:', req.user.username);
+
 		try {
 			const userToFollow = await User.findOne({ username: username });
+			console.log('user to follow:', userToFollow.username);
 
 			if (!userToFollow) {
-				return res.status(404).json({ message: 'User not found' });
+				console.log('A');
+				res.status(404).json({ message: 'User not found' });
 			}
 
 			if (userToFollow.username === req.user.username) {
-				return res
-					.status(400)
-					.json({ message: 'You cannot follow yourself' });
+				console.log('b');
+				res.status(400).json({ message: 'You cannot follow yourself' });
 			}
 
 			if (userToFollow.followers.includes(req.user.username)) {
-				return res
-					.status(400)
-					.json({ message: 'You already follow this user' });
+				console.log('c');
+				res.status(400).json({
+					message: 'You already follow this user',
+				});
 			}
 
-			userToFollow.followers.unshift(req.user.username);
-			await userToFollow.save();
+			User.update(
+				{ username: username },
+				{
+					$push: { followers: username },
+				},
+				(err, done) => {
+					if (err) {
+						res.status(500).json({
+							message: 'Server Error. Update not completed.',
+						});
+					}
+
+					console.log('Done', done);
+					res.status(201).json({
+						message: `User: ${req.user.username} succesfully followed ${username}`,
+					});
+				}
+			);
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: 'Server Error' });
