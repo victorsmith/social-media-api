@@ -39,7 +39,6 @@ passport.use(jwtStrategy);
 
 app.use('/auth', routes.auth);
 app.use('/users', routes.users);
-app.use('/session', routes.session);
 app.use('/tweets', routes.tweets);
 
 // Implement better routing if time is available later => this is kinda messy
