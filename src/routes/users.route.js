@@ -85,55 +85,50 @@ usersRouter.get(
 	}
 );
 
+// FIXME:
 // Follow user with :username
 usersRouter.post(
 	'/:username/follow',
 	passport.authenticate('jwt', { session: false }),
 	async (req, res, next) => {
 		const { username } = req.params;
+		const me = req.user.username;
 
-		console.log('Username:', username);
-		console.log('Logged in user:', req.user.username);
+		console.log('##ME', me);
 
 		try {
-			const userToFollow = await User.findOne({ username: username });
-			console.log('user to follow:', userToFollow.username);
+			const follower = await User.findOne({ username: me });
+			const followed = await User.findOne({ username: username });
 
-			if (!userToFollow) {
-				console.log('A');
+			if (!followed) {
 				res.status(404).json({ message: 'User not found' });
 			}
 
-			if (userToFollow.username === req.user.username) {
-				console.log('b');
+			if (followed.username === me) {
 				res.status(400).json({ message: 'You cannot follow yourself' });
 			}
 
-			if (userToFollow.followers.includes(req.user.username)) {
-				console.log('c');
+			console.log("Follwed:", followed);
+			console.log("Follwed:", followed.followers);
+
+			if (followed.followers.includes(me)) {
 				res.status(400).json({
 					message: 'You already follow this user',
 				});
 			}
 
-			User.update(
-				{ username: username },
-				{
-					$push: { followers: username },
-				},
-				(err, done) => {
-					if (err) {
-						res.status(500).json({
-							message: 'Server Error. Update not completed.',
-						});
-					}
+			const updatedFollowing = [...follower.following, followed];
+			const updatedFollowers = [...followed.followers, follower];
 
-					console.log('Done', done);
-					res.status(201).json({
-						message: `User: ${req.user.username} succesfully followed ${username}`,
-					});
-				}
-			);
+			follower.following = updatedFollowing;
+			followed.followers = updatedFollowers;
+
+			await follower.save();
+			await followed.save();
+
+			return res.status(201).json({
+				message: 'Follow succesful',
+			});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: 'Server Error' });
@@ -196,7 +191,7 @@ usersRouter.put(
 				if (err) {
 					res.send(500, 'No users found');
 				}
-				res.send(200, 'User updated');
+				res.status(201).send('User updated');
 			}
 		);
 	}
