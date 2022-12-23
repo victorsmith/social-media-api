@@ -164,9 +164,7 @@ usersRouter.post(
 				});
 			}
 
-			// console.log('TIiiiiiiiiiiiiiiiitsssss');
-			console.log('Asssssss');
-			// console.log('Fuck');
+			// TODO: Add some more error handling if you have time
 
 			// Rewmove the following user from followers array
 			const updatedFollowers = followed.followers.filter((f) => {
@@ -174,16 +172,14 @@ usersRouter.post(
 					return f;
 				}
 			});
-			console.log('####$$$$##### updatedFollowers', updatedFollowers);
 			followed.followers = updatedFollowers;
-
+			
 			// Rewmove the followed user from following array
 			const updatedFollowing = follower.following.filter((f) => {
 				if (!f._id.equals(followed._id)) {
 					return f;
 				}
 			});
-			console.log('updatedFollowing', updatedFollowing);
 			follower.following = updatedFollowing;
 
 			await followed.save();

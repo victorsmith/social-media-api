@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
 // Models
+import User from '../models/user.model'
 import Tweet from '../models/tweet.model';
 const passport = require('passport');
-
 
 const tweetsRouter = new Router();
 
@@ -17,10 +17,9 @@ tweetsRouter.get(
 			.sort({ timestamp: -1 })
 			.exec((err, tweets) => {
 				if (err) {
-					res.send(500, 'No tweets found');
+					res.send(500, 'Error');
 				}
-				res.json(tweets);
-				res.send(200, 'Tweets fetched');
+				return res.status(200).json(tweets);
 			});
 	}
 );
@@ -34,8 +33,7 @@ tweetsRouter.get(
 			if (err) {
 				res.send(500, 'No tweet found');
 			}
-			res.json(tweet);
-			res.send(200, 'Tweet fetched');
+			return res.status(200).json(tweet);
 		});
 	}
 );
@@ -44,25 +42,42 @@ tweetsRouter.get(
 tweetsRouter.post(
 	'/',
 	passport.authenticate('jwt', { session: false }),
-	(req, res) => {
-		const tweet = new Tweet({
-			user: req.user,
-			content: req.body.content,
-		}).save((err) => {
-			if (err) {
-				res.send(500, 'Error posting tweet');
-			}
-			res.send(201, 'Tweet posted');
-		});
+	async (req, res) => {
+		const { content } = req.body
+		const authorUsername = req.user.username;
+
+		try {
+			const author = await User.findOne({ authorUsername })
+
+			const tweet = new Tweet({
+				author: author,
+				content: content,
+			});
+			
+			await tweet.save()
+
+			return res.status(201).json({
+				message: 'Tweet Posted Succesfuly!',
+				tweet: [ tweet ],
+			});
+		} catch (error) {
+			console.log('Tweet Post Error', error);
+			return res.status(400).json({
+				message: 'Tweet Post Error',
+				error: error,
+			});
+		}
+		
 	}
 );
 
+// FIXME: not working
 // Edit tweet
 tweetsRouter.put(
 	'/:id',
 	passport.authenticate('jwt', { session: false }),
 	(req, res) => {
-		Tweet.findByIdAndUpdate(req.params.id, req.body, (err, tweet) => {
+		Tweet.findByIdAndUpdate(req.params.id, { content: req.body.content }, (err, tweet) => {
 			if (err) {
 				res.send(500, 'Error updating tweet');
 			}
