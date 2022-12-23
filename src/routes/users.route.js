@@ -108,27 +108,28 @@ usersRouter.post(
 				res.status(400).json({ message: 'You cannot follow yourself' });
 			}
 
-			console.log('Follwed:', followed);
-			console.log('Follwed:', followed.followers);
+			let duplicate = followed.followers.find((f) =>
+				f._id.equals(follower._id)
+			);
 
-			if (followed.followers.includes(me)) {
+			if (duplicate) {
 				res.status(400).json({
 					message: 'You already follow this user',
 				});
+			} else {
+				const updatedFollowing = [...follower.following, followed];
+				const updatedFollowers = [...followed.followers, follower];
+
+				follower.following = updatedFollowing;
+				followed.followers = updatedFollowers;
+
+				await follower.save();
+				await followed.save();
+
+				res.status(201).json({
+					message: 'Follow succesful',
+				});
 			}
-
-			const updatedFollowing = [...follower.following, followed];
-			const updatedFollowers = [...followed.followers, follower];
-
-			follower.following = updatedFollowing;
-			followed.followers = updatedFollowers;
-
-			await follower.save();
-			await followed.save();
-
-			return res.status(201).json({
-				message: 'Follow succesful',
-			});
 		} catch (error) {
 			console.error(error);
 			res.status(500).json({ message: 'Server Error' });
@@ -145,15 +146,9 @@ usersRouter.post(
 		const { username } = req.params;
 		const me = req.user.username;
 
-		console.log('##ME', me);
-
 		try {
-			const follower = await User.findOne({ username: me }).populate(
-				'following'
-			);
-			const followed = await User.findOne({
-				username: username,
-			}).populate('followers');
+			const follower = await User.findOne({ username: me });
+			const followed = await User.findOne({ username: username });
 
 			console.log('##################');
 			console.log('Follower', follower);
@@ -169,36 +164,35 @@ usersRouter.post(
 				});
 			}
 
-			if (!followed.followers.includes(me)) {
-				res.status(400).json({
-					message: 'You don not follow this user',
-				});
-			}
+			// console.log('TIiiiiiiiiiiiiiiiitsssss');
+			console.log('Asssssss');
+			// console.log('Fuck');
 
 			// Rewmove the following user from followers array
-			const indexInFollowersArr = follower.followers.indexOf(follower);
-			const updatedFollowers = followed.followers.splice(
-				1,
-				indexInFollowersArr
-			);
-
-			// Rewmove the followed user from following array
-			const indexInFollowingArr = follower.following.indexOf(followed);
-			const updatedFollowing = follower.following.splice(
-				1,
-				indexInFollowingArr
-			);
-
-			follower.following = updatedFollowing;
+			const updatedFollowers = followed.followers.filter((f) => {
+				if (!f._id.equals(follower._id)) {
+					return f;
+				}
+			});
+			console.log('####$$$$##### updatedFollowers', updatedFollowers);
 			followed.followers = updatedFollowers;
 
-			await follower.save();
+			// Rewmove the followed user from following array
+			const updatedFollowing = follower.following.filter((f) => {
+				if (!f._id.equals(followed._id)) {
+					return f;
+				}
+			});
+			console.log('updatedFollowing', updatedFollowing);
+			follower.following = updatedFollowing;
+
 			await followed.save();
+			await follower.save();
 
-			console.log("Here?")
-
-			return res.status(201).json({
+			res.status(201).json({
 				message: 'Unfollow succesful',
+				follower: [follower],
+				followed: [followed],
 			});
 		} catch (error) {
 			console.error(error);

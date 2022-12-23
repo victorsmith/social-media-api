@@ -43,6 +43,8 @@ authRouter.post('/register', async (req, res, next) => {
 		password: hashedPassword,
 	});
 
+	console.log("User", user);
+
 	try {
 		await user.save();
 		// Issue JWT
@@ -60,12 +62,15 @@ authRouter.post('/register', async (req, res, next) => {
 			},
 		});
 	} catch (error) {
+		console.log("Error", error);
 		return res.status(400).json({
 			message: 'Registration error',
 			error: error,
 		});
 	}
 });
+
+
 // Login
 authRouter.post('/login', async (req, res, next) => {
 	const { username, password } = req.body;
