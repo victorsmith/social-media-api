@@ -9,6 +9,8 @@ import path from 'path';
 const pathToKey = path.join(__dirname, '..', 'private-key.pem');
 const publicKey = fs.readFileSync(pathToKey, 'utf-8');
 
+// Could add a cookie extractor here
+
 const options = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 	secretOrKey: publicKey,
@@ -16,8 +18,6 @@ const options = {
 };
 
 const jwtStrategy = new Strategy(options, (payload, done) => {
-
-	console.log("Payload", payload);
 
 	User.findOne({ _id: payload.id })
 		.then((user) => {
@@ -32,6 +32,7 @@ const jwtStrategy = new Strategy(options, (payload, done) => {
 
 function initializePassport(passport) {
 	console.log("Initialized Passport JS")
+	// console.log("Strat Object", jwtStrategy)
 	passport.use(jwtStrategy);
 }
 

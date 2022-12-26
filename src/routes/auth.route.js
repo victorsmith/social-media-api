@@ -43,7 +43,7 @@ authRouter.post('/register', async (req, res, next) => {
 		password: hashedPassword,
 	});
 
-	console.log("User", user);
+	console.log('User', user);
 
 	try {
 		await user.save();
@@ -51,6 +51,12 @@ authRouter.post('/register', async (req, res, next) => {
 		const token = issueJwt(user);
 
 		console.log('Token', token);
+		
+		res.cookie('token', token, {
+			maxAge: 90000,
+			secure: false,
+			httpOnly: true,
+		});
 
 		return res.status(201).json({
 			message: 'Registration Succesful',
@@ -62,14 +68,13 @@ authRouter.post('/register', async (req, res, next) => {
 			},
 		});
 	} catch (error) {
-		console.log("Error", error);
+		console.log('Error', error);
 		return res.status(400).json({
 			message: 'Registration error',
 			error: error,
 		});
 	}
 });
-
 
 // Login
 authRouter.post('/login', async (req, res, next) => {
@@ -82,6 +87,14 @@ authRouter.post('/login', async (req, res, next) => {
 
 			if (passwordCheck) {
 				const token = issueJwt(user);
+				
+				console.log('### token', token);
+				res.cookie('token', token)
+				// , {
+				// 	// secure: false,
+				// 	httpOnly: false,
+				// });
+
 				return res.status(201).json({
 					message: 'Login Succesful',
 					token: token,
@@ -102,15 +115,20 @@ authRouter.post('/login', async (req, res, next) => {
 	}
 });
 
-
 // Test JWT
 authRouter.get(
 	'/test',
-	passport.authenticate('jwt', { session: false }),  // Passport middleware
+	passport.authenticate('jwt', { session: false }), // Passport middleware
 	(req, res) => {
+		console.log('=================');
+		console.log('Req', req);
+		console.log('=================');
+		console.log('=================');
+		console.log('=================');
+		console.log('Res', res);
 		res.status(200).json({
 			message: 'auth route works',
-			user: req.user
+			user: req.user,
 		});
 	}
 );

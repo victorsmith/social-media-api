@@ -8,7 +8,7 @@ const path = require('path');
 const pathToKey = path.join(__dirname, '..', 'private-key.pem');
 const PRIVATE_KEY = fs.readFileSync(pathToKey, 'utf8');
 
-// Extracts user info from JWT 
+// Extracts user info from JWT
 function getJwtData(req, res, next) {
 	if (!req.user) {
 		// Bearer token?
@@ -23,11 +23,13 @@ function getJwtData(req, res, next) {
 // Issues a JWT
 const issueJwt = (user) => {
 	const _id = user._id;
-	const expiresIn = '1d';
+
+	// For testing purposes
+	const expiresIn = '15s';
+	// const expiresIn = '1d';
 
 	const payload = {
 		id: _id,
-		iat: Date.now(),
 	};
 
 	const signedToken = jwt.sign(payload, PRIVATE_KEY, {

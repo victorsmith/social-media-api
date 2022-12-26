@@ -15,9 +15,12 @@ tweetsRouter.get(
 		Tweet.find()
 			.limit(15)
 			.sort({ timestamp: -1 })
+			.populate('author')
 			.exec((err, tweets) => {
 				if (err) {
-					res.send(500, 'Error');
+					return res.status(400).json({
+						message: "No tweets. There's an error"
+					});
 				}
 				return res.status(200).json(tweets);
 			});
@@ -33,7 +36,8 @@ tweetsRouter.get(
 			if (err) {
 				res.send(500, 'No tweet found');
 			}
-			return res.status(200).json(tweet);
+			// return res.status(200).json(tweet);
+			return res.json(tweet);
 		});
 	}
 );
@@ -92,11 +96,13 @@ tweetsRouter.delete(
 	'/:id',
 	passport.authenticate('jwt', { session: false }),
 	(req, res) => {
+		console.log('Deleteing', req.params);
 		Tweet.findByIdAndRemove(req.params.id, (err) => {
 			if (err) {
 				res.send(500, 'Error deleting tweet');
 			}
-			res.json({ message: 'Tweet deleted' });
+			
+			return res.json({ message: 'Tweet deleted' });
 		});
 	}
 );

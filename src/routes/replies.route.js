@@ -42,25 +42,35 @@ replyRouter.post(
 	'/:tweetId',
 	passport.authenticate('jwt', { session: false }),
 	async (req, res, next) => {
-		const { tweetId, reply } = req.body;
-		const post = await Tweet.findOne({ _id: tweetId });
+		const { reply } = req.body;
+		const { tweetId } = req.params;
 
+		console.log("TweetID", tweetId);
+		console.log("Reply", reply)
+		
+		const post = await Tweet.findOne({ _id: tweetId });
 		if (!post) {
 			return res.status(404).json({ message: 'Post not found' });
 		}
 
 		try {
-			const newComment = {
+
+			console.log("User", req.user);
+
+			const newReply = {
 				author: req.user,
 				content: reply,
 				parentTweet: tweetId,
 			};
-			post.comments.unshift(newComment);
+
+			const updatedReplies = [...post.replies, newReply]
+			post.replies = updatedReplies;
 			await post.save();
-			res.status(200).json(post.comments);
+
+			return res.status(200).json(post);
 		} catch (error) {
 			console.error(error);
-			res.status(500).json({ message: 'Server Error' });
+			return res.status(500).json({ message: 'Server Error' });
 		}
 	}
 );
