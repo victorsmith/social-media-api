@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-// User Model
+
+// models
 import User from '../models/user.model';
 import Tweet from '../models/tweet.model';
-const passport = require('passport');
+import Reply from '../models/reply.model'
 
+const passport = require('passport');
 const replyRouter = new Router();
 
 // Get all reply's the current logged in user has sent /*
@@ -42,30 +44,36 @@ replyRouter.post(
 	'/:tweetId',
 	passport.authenticate('jwt', { session: false }),
 	async (req, res, next) => {
-		const { reply } = req.body;
+		const { content } = req.body;
 		const { tweetId } = req.params;
 
-		console.log("TweetID", tweetId);
-		console.log("Reply", reply)
+		console.log('### TweetID', tweetId);
+		console.log("### Content:", content)
+		
+		if (!req.user) {
+			return res.status(404).json({ message: 'User not signed in' });
+		}
 		
 		const post = await Tweet.findOne({ _id: tweetId });
 		if (!post) {
 			return res.status(404).json({ message: 'Post not found' });
 		}
-
+		
 		try {
-
 			console.log("User", req.user);
-
-			const newReply = {
+			
+			const reply = new Reply({
 				author: req.user,
-				content: reply,
+				content: content,
 				parentTweet: tweetId,
-			};
-
-			const updatedReplies = [...post.replies, newReply]
+			});
+			
+			const updatedReplies = [...post.replies, reply]
+		
 			post.replies = updatedReplies;
+		
 			await post.save();
+			await reply.save();
 
 			return res.status(200).json(post);
 		} catch (error) {

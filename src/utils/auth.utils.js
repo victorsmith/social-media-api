@@ -25,8 +25,8 @@ const issueJwt = (user) => {
 	const _id = user._id;
 
 	// For testing purposes
-	const expiresIn = '15s';
-	// const expiresIn = '1d';
+	// const expiresIn = '15s';
+	const expiresIn = '1d';
 
 	const payload = {
 		id: _id,
@@ -37,10 +37,9 @@ const issueJwt = (user) => {
 		algorithm: 'RS256',
 	});
 
-	return {
-		token: 'Bearer ' + signedToken,
-		expires: expiresIn,
-	};
+	const finalToken = 'Bearer ' + signedToken;
+	return finalToken
+
 };
 
 // Generate a secure password

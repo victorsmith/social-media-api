@@ -87,13 +87,12 @@ authRouter.post('/login', async (req, res, next) => {
 
 			if (passwordCheck) {
 				const token = issueJwt(user);
-				
-				console.log('### token', token);
-				res.cookie('token', token)
-				// , {
-				// 	// secure: false,
-				// 	httpOnly: false,
-				// });
+				console.log(token);
+				res.cookie('token', token, {
+					// maxAge: 9000,
+					secure: false,
+					httpOnly: false,
+				});
 
 				return res.status(201).json({
 					message: 'Login Succesful',
