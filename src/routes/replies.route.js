@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 // models
 import User from '../models/user.model';
 import Tweet from '../models/tweet.model';
-import Reply from '../models/reply.model'
+import Reply from '../models/reply.model';
 
 const passport = require('passport');
 const replyRouter = new Router();
@@ -48,30 +48,38 @@ replyRouter.post(
 		const { tweetId } = req.params;
 
 		console.log('### TweetID', tweetId);
-		console.log("### Content:", content)
-		
+		console.log('### Content:', content);
+
 		if (!req.user) {
 			return res.status(404).json({ message: 'User not signed in' });
 		}
-		
+
 		const post = await Tweet.findOne({ _id: tweetId });
 		if (!post) {
 			return res.status(404).json({ message: 'Post not found' });
 		}
-		
+
 		try {
-			console.log("User", req.user);
-			
+			console.log('User', req.user);
+
 			const reply = new Reply({
 				author: req.user,
 				content: content,
 				parentTweet: tweetId,
 			});
-			
-			const updatedReplies = [...post.replies, reply]
-		
+
+			const updatedReplies = [...post.replies, reply];
+			// const userReplies = []
 			post.replies = updatedReplies;
-		
+
+			let updatedUser = await User.findOneAndUpdate(
+				{ _id: req.user._id },
+				{ "$push": { "replies": reply } },
+				{ new: true }
+			);
+
+			console.log("#### updatedUser", updatedUser);
+
 			await post.save();
 			await reply.save();
 
