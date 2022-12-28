@@ -60,18 +60,3 @@ I've been learning about DevOps lately, and would love to use the knowledge in a
 
 ### 3) Run the project
 ``` npm run dev ```
-
-
-
-{
-  "username": "victorsmith",
-  "email": "me@victorsmith.dev",
-  "password": "password123"
-}
-
-{ 
-  "username": "elon",
-  "email": "me@elon.dev",
-  "password": "password123"
-}
-
