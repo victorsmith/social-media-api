@@ -64,23 +64,29 @@ usersRouter.get(
 
 // Get user with :username (username is a primary key)
 usersRouter.get(
-	'/:username',
+	'/:id',
 	passport.authenticate('jwt', { session: false }),
 	(req, res, next) => {
-		User.findOne({ username: req.user.username }, (err, user) => {
+		console.log('------------------------');
+		const { id } = req.params;
+		console.log('Getting user with id', id);
+
+		User.findOne({ _id: id }, (err, user) => {
 			if (err) {
 				res.send(500, 'No users found');
 			}
 
+			console.log("USER FOUND", user)
 			// Never send back the password of the user
-			const { _id, username, tweets, followers, following } = req.user;
-			res.status(200).json({
-				id: _id,
-				username: username,
-				tweets: tweets,
-				followers: followers,
-				following: following,
-			});
+			// const { _id, username, tweets, followers, following } = user;
+			// res.status(200).json({
+			// 	id: _id,
+			// 	username: username,
+			// 	tweets: tweets,
+			// 	followers: followers,
+			// 	following: following,
+			// });
+			return res.status(200).json(user)
 		});
 	}
 );
@@ -173,7 +179,7 @@ usersRouter.post(
 				}
 			});
 			followed.followers = updatedFollowers;
-			
+
 			// Rewmove the followed user from following array
 			const updatedFollowing = follower.following.filter((f) => {
 				if (!f._id.equals(followed._id)) {

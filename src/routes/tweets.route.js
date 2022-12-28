@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 // Models
-import User from '../models/user.model'
+import User from '../models/user.model';
 import Tweet from '../models/tweet.model';
 const passport = require('passport');
 
@@ -19,10 +19,13 @@ tweetsRouter.get(
 			.exec((err, tweets) => {
 				if (err) {
 					return res.status(400).json({
-						message: "No tweets. There's an error"
+						message: "No tweets. There's an error",
 					});
 				}
-				return res.status(200).json(tweets);
+				return res.status(200).json({
+					user: req.user,
+					tweets: tweets,
+				});
 			});
 	}
 );
@@ -32,13 +35,16 @@ tweetsRouter.get(
 	'/:id',
 	passport.authenticate('jwt', { session: false }),
 	(req, res) => {
-		Tweet.findById(req.params.id, (err, tweet) => {
-			if (err) {
-				res.send(500, 'No tweet found');
-			}
-			// return res.status(200).json(tweet);
-			return res.json(tweet);
-		});
+		Tweet.findById(req.params.id)
+		.populate('replies')
+		.populate('author')
+			.exec((err, tweet) => {
+				if (err) {
+					res.send(500, 'No tweet found');
+				}
+				// return res.status(200).json(tweet);
+				return res.json(tweet);
+			});
 	}
 );
 
@@ -47,22 +53,22 @@ tweetsRouter.post(
 	'/',
 	passport.authenticate('jwt', { session: false }),
 	async (req, res) => {
-		const { content } = req.body
+		const { content } = req.body;
 		const authorUsername = req.user.username;
 
 		try {
-			const author = await User.findOne({ authorUsername })
+			const author = await User.findOne({ authorUsername });
 
 			const tweet = new Tweet({
 				author: author,
 				content: content,
 			});
-			
-			await tweet.save()
+
+			await tweet.save();
 
 			return res.status(201).json({
 				message: 'Tweet Posted Succesfuly!',
-				tweet: [ tweet ],
+				tweet: [tweet],
 			});
 		} catch (error) {
 			console.log('Tweet Post Error', error);
@@ -71,7 +77,6 @@ tweetsRouter.post(
 				error: error,
 			});
 		}
-		
 	}
 );
 
@@ -81,13 +86,17 @@ tweetsRouter.put(
 	'/:id',
 	passport.authenticate('jwt', { session: false }),
 	(req, res) => {
-		Tweet.findByIdAndUpdate(req.params.id, { content: req.body.content }, (err, tweet) => {
-			if (err) {
-				res.send(500, 'Error updating tweet');
+		Tweet.findByIdAndUpdate(
+			req.params.id,
+			{ content: req.body.content },
+			(err, tweet) => {
+				if (err) {
+					res.send(500, 'Error updating tweet');
+				}
+				// tweet.content = req.body.content;
+				res.send(201, 'Tweet updated');
 			}
-			// tweet.content = req.body.content;
-			res.send(201, 'Tweet updated');
-		});
+		);
 	}
 );
 
@@ -101,7 +110,7 @@ tweetsRouter.delete(
 			if (err) {
 				res.send(500, 'Error deleting tweet');
 			}
-			
+
 			return res.json({ message: 'Tweet deleted' });
 		});
 	}

@@ -14,13 +14,17 @@ replyRouter.get(
 	'/',
 	passport.authenticate('jwt', { session: false }),
 	(req, res, next) => {
-		Reply.find({ author: req.user }, (err, replies) => {
-			if (err) {
-				res.send(500, 'No replies found');
-			}
-			res.json(replies);
-			res.send(200, 'Replies fetched');
-		});
+		Reply.find(
+			{ author: req.user }
+				.sort({ timestamp: -1 })
+				.exec((err, replies) => {
+					if (err) {
+						res.send(500, 'No replies found');
+					}
+					res.json(replies);
+					res.send(200, 'Replies fetched');
+				})
+		);
 	}
 );
 
@@ -69,16 +73,13 @@ replyRouter.post(
 			});
 
 			const updatedReplies = [...post.replies, reply];
-			// const userReplies = []
 			post.replies = updatedReplies;
 
-			let updatedUser = await User.findOneAndUpdate(
+			const updatedUser = await User.findOneAndUpdate(
 				{ _id: req.user._id },
-				{ "$push": { "replies": reply } },
+				{ $push: { replies: reply } },
 				{ new: true }
 			);
-
-			console.log("#### updatedUser", updatedUser);
 
 			await post.save();
 			await reply.save();
@@ -98,7 +99,12 @@ replyRouter.put(
 	async (req, res, next) => {
 		const { updatedContent } = req.body;
 		try {
-			const reply = await Reply.findOne({ _id: req.params.id });
+			const reply = await Reply.findOneAndUpdate(
+				{ _id: req.params.id },
+				{ $push: { replies: reply } },
+				{ new: true }
+			);
+
 			reply.content = updatedContent;
 			await reply.save();
 			res.status(200).json(reply);
